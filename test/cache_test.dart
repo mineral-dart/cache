@@ -1,8 +1,5 @@
-import 'package:cache/cache.dart';
-import 'package:test/test.dart';
+import './memory_test.dart' as memory_test;
 
 void main() {
-  test('calculate', () {
-    expect(calculate(), 42);
-  });
+  memory_test.main();
 }

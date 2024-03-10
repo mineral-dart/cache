@@ -8,16 +8,16 @@ final class MemoryProvider implements CacheProviderContract<Snowflake> {
   String get name => 'InMemoryProvider';
 
   @override
-  int get length => _storage.length;
+  Future<int> length() async => _storage.length;
 
   @override
-  Map<Snowflake, T> getAll<T extends dynamic>() => _storage as Map<Snowflake, T>;
+  Future<Map<Snowflake, T>> getAll<T extends dynamic>() async => _storage as Map<Snowflake, T>;
 
   @override
-  T? get<T>(Snowflake? key) => _storage[key];
+  Future<T?> get<T>(Snowflake? key) async => _storage[key];
 
   @override
-  T getOrFail<T>(Snowflake key, {Exception Function()? onFail}) {
+  Future<T> getOrFail<T>(Snowflake key, {Exception Function()? onFail}) async {
     if (!_storage.containsKey(key)) {
       if (onFail case Function()) {
         throw onFail!();
@@ -29,31 +29,31 @@ final class MemoryProvider implements CacheProviderContract<Snowflake> {
   }
 
   @override
-  bool has(Snowflake key) =>  _storage.containsKey(key);
+  Future<bool> has(Snowflake key) async => _storage.containsKey(key);
 
   @override
-  void put<T>(Snowflake key, T object) {
+  Future<void> put<T>(Snowflake key, T object) async {
     _storage[key] = object;
   }
 
   @override
-  void remove(Snowflake key) {
+  Future<void> remove(Snowflake key) async {
     _storage.remove(key);
   }
 
   @override
-  void removeMany(List<Snowflake> keys) {
+  Future<void> removeMany(List<Snowflake> keys) async {
     for (final key in keys) {
       _storage.remove(key);
     }
   }
 
   @override
-  void clear() => _storage.clear();
+  Future<void> clear() async => _storage.clear();
 
   @override
-  bool getHealth() => true;
+  Future<bool> getHealth() async => true;
 
   @override
-  void dispose() => _storage.clear();
+  Future<void> dispose() async => _storage.clear();
 }

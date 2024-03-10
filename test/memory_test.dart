@@ -1,4 +1,4 @@
-import 'package:cache/providers/memory/memory_provider.dart';
+import 'package:mineral_cache/providers/memory/memory_provider.dart';
 import 'package:test/test.dart';
 import 'package:mineral/api/common/snowflake.dart';
 

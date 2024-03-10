@@ -1,7 +1,8 @@
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
+import 'package:mineral/api/common/snowflake.dart';
 
-final class MemoryProviderContract implements CacheProviderContract {
-  final Map<String, dynamic> _storage = {};
+final class MemoryProvider implements CacheProviderContract<Snowflake> {
+  final Map<Snowflake, dynamic> _storage = {};
 
   @override
   String get name => 'InMemoryProvider';
@@ -10,13 +11,13 @@ final class MemoryProviderContract implements CacheProviderContract {
   int get length => _storage.length;
 
   @override
-  Map<String, T> getAll<T extends dynamic>() => _storage as Map<String, T>;
+  Map<Snowflake, T> getAll<T extends dynamic>() => _storage as Map<Snowflake, T>;
 
   @override
-  T? get<T>(String? key) => _storage[key];
+  T? get<T>(Snowflake? key) => _storage[key];
 
   @override
-  T getOrFail<T>(String key, {Exception Function()? onFail}) {
+  T getOrFail<T>(Snowflake key, {Exception Function()? onFail}) {
     if (!_storage.containsKey(key)) {
       if (onFail case Function()) {
         throw onFail!();
@@ -28,20 +29,20 @@ final class MemoryProviderContract implements CacheProviderContract {
   }
 
   @override
-  bool has(String key) =>  _storage.containsKey(key);
+  bool has(Snowflake key) =>  _storage.containsKey(key);
 
   @override
-  void put<T>(String key, T object) {
+  void put<T>(Snowflake key, T object) {
     _storage[key] = object;
   }
 
   @override
-  void remove(String key) {
+  void remove(Snowflake key) {
     _storage.remove(key);
   }
 
   @override
-  void removeMany(List<String> keys) {
+  void removeMany(List<Snowflake> keys) {
     for (final key in keys) {
       _storage.remove(key);
     }

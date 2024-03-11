@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mineral/application/environment/env.dart';
+import 'package:mineral/application/environment/environment.dart';
 import 'package:mineral/application/logger/logger.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 import 'package:mineral_cache/providers/redis/redis_env_keys.dart';

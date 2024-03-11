@@ -1,6 +1,6 @@
-import 'package:mineral/application/environment/environment_schema.dart';
+import 'package:mineral/application/environment/env_schema.dart';
 
-enum RedisEnvKeys implements EnvironmentSchema {
+enum RedisEnvKeys implements EnvSchema {
   redisHost('REDIS_HOST'),
   redisPort('REDIS_PORT'),
   redisPassword('REDIS_PASSWORD');

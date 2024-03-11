@@ -27,6 +27,20 @@ final class RedisProvider implements CacheProviderContract<String> {
   Future<void> init() async {
     try {
       await _connection.connect('localhost', 6379);
+
+      final Map<String, dynamic> credentials = {
+        'service': 'cache',
+        'message': 'redis is connected',
+        'payload': {
+          'host': settings.host,
+          'port': settings.port,
+          'password': settings.password != null
+              ? '*' * settings.password!.length
+              : 'NO PASSWORD',
+        },
+      };
+
+      logger.trace(jsonEncode(credentials));
     } on SocketException catch(error) {
       logger.fatal(error);
       throw Exception('$name - ${error.message}');

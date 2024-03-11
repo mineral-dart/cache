@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:mineral/application/logger/logger.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 
@@ -8,7 +10,15 @@ final class MemoryProvider implements CacheProviderContract<String> {
   late final LoggerContract logger;
 
   @override
-  Future<void> init() async {}
+  Future<void> init() async {
+    final Map<String, dynamic> credentials = {
+      'service': 'cache',
+      'message': 'memory is used',
+      'payload': {},
+    };
+
+    logger.trace(jsonEncode(credentials));
+  }
 
   @override
   String get name => 'InMemoryProvider';

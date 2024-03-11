@@ -22,15 +22,20 @@ final class RedisProvider implements CacheProviderContract<String> {
 
   @override
   Future<int> length() async {
-    final keys = await Command(_connection).send_object(['SCAN', 0]);
-    print(keys);
-    return 1;
+    final value = await Command(_connection).send_object(['SCAN', 0]);
+    return switch(value) {
+      List() => value.length,
+      String() => int.parse(value),
+      _ => value,
+    };
   }
 
   @override
-  Future<Map<String, T>> getAll<T extends dynamic>() async {
+  Future<List<T>> getAll<T extends dynamic>() async {
+    final keys = await Command(_connection).send_object(['KEYS', '*']);
+    final values = await Command(_connection).send_object(['MGET', ...keys]);
 
-    return {};
+    return List.from(values.map((e) => jsonDecode(e)));
   }
 
   @override

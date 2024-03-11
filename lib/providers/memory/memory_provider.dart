@@ -13,7 +13,7 @@ final class MemoryProvider implements CacheProviderContract<String> {
   Future<int> length() async => _storage.length;
 
   @override
-  Future<Map<String, T>> getAll<T extends dynamic>() async => _storage as Map<String, T>;
+  Future<List<T>> getAll<T extends dynamic>() async => List.from(_storage.values);
 
   @override
   Future<T?> get<T>(String? key) async => _storage[key];

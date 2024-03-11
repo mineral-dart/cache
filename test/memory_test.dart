@@ -1,6 +1,5 @@
 import 'package:mineral_cache/providers/memory/memory_provider.dart';
 import 'package:test/test.dart';
-import 'package:mineral/api/common/snowflake.dart';
 
 void main() {
   test('can create in-memory provider', () {
@@ -15,25 +14,25 @@ void main() {
 
   test('can put elements', () {
     final provider = MemoryProvider();
-    provider.put(Snowflake('key'), 'value');
-    expect(provider.has(Snowflake('key')), true);
+    provider.put('key', 'value');
+    expect(provider.has('key'), true);
   });
 
   test('can remove elements', () {
     final provider = MemoryProvider();
-    provider.put(Snowflake('key'), 'value');
-    provider.remove(Snowflake('key'));
-    expect(provider.has(Snowflake('key')), false);
+    provider.put('key', 'value');
+    provider.remove('key');
+    expect(provider.has('key'), false);
   });
 
   test('can remove many elements', () {
     final provider = MemoryProvider();
-    provider.put(Snowflake('key1'), 'value');
-    provider.put(Snowflake('key2'), 'value2');
+    provider.put('key1', 'value');
+    provider.put('key2', 'value2');
 
-    provider.removeMany([Snowflake('key1'), Snowflake('key2')]);
+    provider.removeMany(['key1', 'key2']);
 
-    expect(provider.has(Snowflake('key1')), false);
-    expect(provider.has(Snowflake('key2')), false);
+    expect(provider.has('key1'), false);
+    expect(provider.has('key2'), false);
   });
 }

@@ -1,7 +1,11 @@
+import 'package:mineral/application/logger/logger.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 
 final class MemoryProvider implements CacheProviderContract<String> {
   final Map<String, dynamic> _storage = {};
+
+  @override
+  late final LoggerContract logger;
 
   @override
   Future<void> init() async {}

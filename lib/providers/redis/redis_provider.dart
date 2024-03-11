@@ -1,12 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:mineral/application/logger/logger.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 import 'package:mineral_cache/providers/redis/redis_settings.dart';
 import 'package:redis/redis.dart';
 
 final class RedisProvider implements CacheProviderContract<String> {
   final RedisConnection _connection = RedisConnection();
+
   late final RedisSettings settings;
+
+  @override
+  late final LoggerContract logger;
 
   RedisProvider({required String host, required int port, String? password}) {
     settings = RedisSettings(host, port, password);
@@ -17,7 +23,12 @@ final class RedisProvider implements CacheProviderContract<String> {
 
   @override
   Future<void> init() async {
-    await _connection.connect('localhost', 6379);
+    try {
+      await _connection.connect('localhost', 6379);
+    } on SocketException catch(error) {
+      logger.fatal(error);
+      throw Exception('$name - ${error.message}');
+    }
   }
 
   @override

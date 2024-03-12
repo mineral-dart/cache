@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -34,14 +35,12 @@ final class RedisProvider implements CacheProviderContract<String> {
         'payload': {
           'host': settings.host,
           'port': settings.port,
-          'password': settings.password != null
-              ? '*' * settings.password!.length
-              : 'NO PASSWORD',
+          'password': settings.password != null ? '*' * settings.password!.length : 'NO PASSWORD',
         },
       };
 
       logger.trace(jsonEncode(credentials));
-    } on SocketException catch(error) {
+    } on SocketException catch (error) {
       logger.fatal(error);
       throw Exception('$name - ${error.message}');
     }
@@ -50,7 +49,7 @@ final class RedisProvider implements CacheProviderContract<String> {
   @override
   Future<int> length() async {
     final value = await Command(_connection).send_object(['SCAN', 0]);
-    return switch(value) {
+    return switch (value) {
       List() => value.length,
       String() => int.parse(value),
       _ => value,
@@ -114,6 +113,17 @@ final class RedisProvider implements CacheProviderContract<String> {
   @override
   Future<void> clear() async {
     return Command(_connection).send_object(['FLUSHALL']);
+  }
+
+  Future<void> subscribe(FutureOr Function(dynamic) callback, {Function(dynamic)? onError}) async {
+    final command = Command(_connection);
+    final stream = PubSub(command).getStream();
+
+    final streamWithoutErrors = onError != null ? stream.handleError(onError) : stream;
+
+    await for (final msg in streamWithoutErrors) {
+      await callback(msg);
+    }
   }
 
   @override

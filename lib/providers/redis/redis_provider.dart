@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:mineral/application/environment/environment.dart';
 import 'package:mineral/application/logger/logger.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
+import 'package:mineral_cache/providers/redis/pub_sub/redis_stream_event.dart';
 import 'package:mineral_cache/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/providers/redis/redis_settings.dart';
 import 'package:redis/redis.dart';
@@ -115,14 +116,17 @@ final class RedisProvider implements CacheProviderContract<String> {
     return Command(_connection).send_object(['FLUSHALL']);
   }
 
-  Future<void> subscribe(FutureOr Function(dynamic) callback, {Function(dynamic)? onError}) async {
+  Future<void> subscribe({required String channel, required FutureOr Function(dynamic) callback, Function? onError}) async {
     final command = Command(_connection);
-    final stream = PubSub(command).getStream();
+    final pubsub = PubSub(command);
+    pubsub.subscribe(['*']);
 
+    final stream = pubsub.getStream();
     final streamWithoutErrors = onError != null ? stream.handleError(onError) : stream;
 
     await for (final msg in streamWithoutErrors) {
-      await callback(msg);
+      final event = RedisStreamEvent(command, channel, msg);
+      await callback(event);
     }
   }
 

@@ -28,7 +28,7 @@ final class RedisProvider implements CacheProviderContract<String> {
   @override
   Future<void> init() async {
     try {
-      await _connection.connect('localhost', 6379);
+      await _connection.connect(settings.host, settings.port);
 
       final Map<String, dynamic> credentials = {
         'service': 'cache',

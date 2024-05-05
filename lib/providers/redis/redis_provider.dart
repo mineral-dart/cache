@@ -9,7 +9,7 @@ import 'package:mineral_cache/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/providers/redis/redis_settings.dart';
 import 'package:redis/redis.dart';
 
-final class RedisProvider implements CacheProviderContract<String> {
+final class RedisProvider implements CacheProviderContract {
   final RedisConnection _connection = RedisConnection();
 
   late final RedisSettings settings;
@@ -65,7 +65,7 @@ final class RedisProvider implements CacheProviderContract<String> {
   }
 
   @override
-  Future<T?> get<T>(String? key) async {
+  Future<String?> get(String? key) async {
     final value = await Command(_connection).get(key ?? '');
     return switch (value) {
       String() => jsonDecode(value),
@@ -74,15 +74,16 @@ final class RedisProvider implements CacheProviderContract<String> {
   }
 
   @override
-  Future<T> getOrFail<T>(String key, {Exception Function()? onFail}) async {
+  Future<String> getOrFail(String key, {Exception Function()? onFail}) async {
     final value = await get(key);
-    if (!value) {
+    if (value == null) {
       if (onFail case Function()) {
         throw onFail!();
       }
 
       throw Exception('Key $key not found');
     }
+
     return value;
   }
 

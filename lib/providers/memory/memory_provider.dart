@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 import 'package:mineral/infrastructure/services/logger/logger.dart';
 
-final class MemoryProvider implements CacheProviderContract<String> {
+final class MemoryProvider implements CacheProviderContract {
   final Map<String, dynamic> _storage = {};
 
   @override
@@ -30,10 +30,10 @@ final class MemoryProvider implements CacheProviderContract<String> {
   Future<List<T>> getAll<T extends dynamic>() async => List.from(_storage.values);
 
   @override
-  Future<T?> get<T>(String? key) async => _storage[key];
+  Future<String?> get(String? key) async => _storage[key];
 
   @override
-  Future<T> getOrFail<T>(String key, {Exception Function()? onFail}) async {
+  Future<String> getOrFail(String key, {Exception Function()? onFail}) async {
     if (!_storage.containsKey(key)) {
       if (onFail case Function()) {
         throw onFail!();

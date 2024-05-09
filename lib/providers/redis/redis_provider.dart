@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mineral/api/common/snowflake.dart';
 import 'package:mineral/domains/environment/environment.dart';
 import 'package:mineral/domains/cache/contracts/cache_provider_contract.dart';
 import 'package:mineral/infrastructure/services/logger/logger.dart';
@@ -57,7 +58,7 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<List<T>> getAll<T extends dynamic>() async {
+  Future<List<Map<String, dynamic>>> getAll() async {
     final keys = await Command(_connection).send_object(['KEYS', '*']);
     final values = await Command(_connection).send_object(['MGET', ...keys]);
 
@@ -65,8 +66,8 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<String?> get(String? key) async {
-    final value = await Command(_connection).get(key ?? '');
+  Future<Map<String, dynamic>?> get(Snowflake? key) async {
+    final value = await Command(_connection).get(key?.value ?? '');
     return switch (value) {
       String() => jsonDecode(value),
       _ => value,
@@ -74,7 +75,7 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<String> getOrFail(String key, {Exception Function()? onFail}) async {
+  Future<Map<String, dynamic>> getOrFail(Snowflake key, {Exception Function()? onFail}) async {
     final value = await get(key);
     if (value == null) {
       if (onFail case Function()) {
@@ -88,7 +89,7 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<bool> has(String key) async {
+  Future<bool> has(Snowflake key) async {
     final result = await Command(_connection).send_object(['EXISTS', key]);
     return switch (result) {
       0 => false,
@@ -97,17 +98,17 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<void> put<T>(String key, T object) async {
+  Future<void> put<T>(Snowflake key, T object) async {
     await Command(_connection).send_object(['SET', key, jsonEncode(object)]);
   }
 
   @override
-  Future<void> remove(String key) async {
+  Future<void> remove(Snowflake key) async {
     return Command(_connection).send_object(['DEL', key]);
   }
 
   @override
-  Future<void> removeMany(List<String> keys) async {
+  Future<void> removeMany(List<Snowflake> keys) async {
     await Command(_connection).send_object(['DEL', ...keys]);
   }
 

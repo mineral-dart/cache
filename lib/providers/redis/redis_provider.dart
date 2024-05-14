@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:mineral/api/common/snowflake.dart';
-import 'package:mineral/domains/environment/environment.dart';
+import 'package:mineral/infrastructure/internals/environment/environment.dart';
 import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.dart';
 import 'package:mineral/infrastructure/services/logger/logger.dart';
 import 'package:mineral_cache/providers/redis/redis_env_keys.dart';

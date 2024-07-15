@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:mineral/api/common/snowflake.dart';
 import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.dart';
 import 'package:mineral/infrastructure/services/logger/logger.dart';
 
@@ -31,10 +31,10 @@ final class MemoryProvider implements CacheProviderContract {
   Future<List<Map<String, dynamic>>> getAll() async => List.from(_storage.values);
 
   @override
-  Future<Map<String, dynamic>?> get(String? key) async => _storage[key];
+  FutureOr<Map<String, dynamic>?> get(String? key) async => _storage[key];
 
   @override
-  Future<Map<String, dynamic>> getOrFail(String key, {Exception Function()? onFail}) async {
+  Map<String, dynamic> getOrFail(String key, {Exception Function()? onFail}) {
     if (!_storage.containsKey(key)) {
       if (onFail case Function()) {
         throw onFail!();

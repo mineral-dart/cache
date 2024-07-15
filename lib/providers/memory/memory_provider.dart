@@ -5,7 +5,7 @@ import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.d
 import 'package:mineral/infrastructure/services/logger/logger.dart';
 
 final class MemoryProvider implements CacheProviderContract {
-  final Map<Snowflake, dynamic> _storage = {};
+  final Map<String, dynamic> _storage = {};
 
   @override
   late final LoggerContract logger;
@@ -31,10 +31,10 @@ final class MemoryProvider implements CacheProviderContract {
   Future<List<Map<String, dynamic>>> getAll() async => List.from(_storage.values);
 
   @override
-  Future<Map<String, dynamic>?> get(Snowflake? key) async => _storage[key];
+  Future<Map<String, dynamic>?> get(String? key) async => _storage[key];
 
   @override
-  Future<Map<String, dynamic>> getOrFail(Snowflake key, {Exception Function()? onFail}) async {
+  Future<Map<String, dynamic>> getOrFail(String key, {Exception Function()? onFail}) async {
     if (!_storage.containsKey(key)) {
       if (onFail case Function()) {
         throw onFail!();
@@ -46,20 +46,20 @@ final class MemoryProvider implements CacheProviderContract {
   }
 
   @override
-  Future<bool> has(Snowflake key) async => _storage.containsKey(key);
+  Future<bool> has(String key) async => _storage.containsKey(key);
 
   @override
-  Future<void> put<T>(Snowflake key, T object) async {
+  Future<void> put<T>(String key, T object) async {
     _storage[key] = object;
   }
 
   @override
-  Future<void> remove(Snowflake key) async {
+  Future<void> remove(String key) async {
     _storage.remove(key);
   }
 
   @override
-  Future<void> removeMany(List<Snowflake> keys) async {
+  Future<void> removeMany(List<String> keys) async {
     for (final key in keys) {
       _storage.remove(key);
     }

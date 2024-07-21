@@ -31,6 +31,9 @@ final class MemoryProvider implements CacheProviderContract {
   Future<List<Map<String, dynamic>>> getAll() async => List.from(_storage.values);
 
   @override
+  Future<Map<String, dynamic>> getInternalValues() async => _storage;
+
+  @override
   FutureOr<Map<String, dynamic>?> get(String? key) async => _storage[key];
 
   @override

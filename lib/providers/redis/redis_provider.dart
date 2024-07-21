@@ -2,9 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mineral/api/common/snowflake.dart';
-import 'package:mineral/infrastructure/internals/environment/environment.dart';
 import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.dart';
+import 'package:mineral/infrastructure/internals/environment/environment.dart';
 import 'package:mineral/infrastructure/services/logger/logger.dart';
 import 'package:mineral_cache/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/providers/redis/redis_settings.dart';
@@ -63,6 +62,14 @@ final class RedisProvider implements CacheProviderContract {
     final values = await Command(_connection).send_object(['MGET', ...keys]);
 
     return List.from(values.map((e) => jsonDecode(e)));
+  }
+
+  @override
+  Future<Map<String, dynamic>> getInternalValues() async {
+    final keys = await Command(_connection).send_object(['KEYS', '*']);
+    final values = await Command(_connection).send_object(['MGET', ...keys]);
+
+    return Map.fromIterables(keys, values.map((e) => jsonDecode(e)));
   }
 
   @override

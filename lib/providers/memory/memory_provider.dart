@@ -28,10 +28,30 @@ final class MemoryProvider implements CacheProviderContract {
   Future<int> length() async => _storage.length;
 
   @override
-  Future<List<Map<String, dynamic>>> getAll() async => List.from(_storage.values);
+  Future<Map<String, dynamic>> inspect() async => _storage;
 
   @override
-  Future<Map<String, dynamic>> getInternalValues() async => _storage;
+  Future<Map<String, dynamic>> whereKeyStartsWith(String prefix) async {
+    final entries = _storage.entries
+        .where((element) => element.key.startsWith(prefix))
+        .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
+
+    return entries;
+  }
+
+  @override
+  Future<Map<String, dynamic>> whereKeyStartsWithOrFail(String prefix,
+      {Exception Function()? onFail}) async {
+    final entries = _storage.entries
+        .where((element) => element.key.startsWith(prefix))
+        .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
+
+    return entries.isEmpty
+        ? onFail != null
+            ? throw onFail()
+            : throw Exception('No keys found')
+        : entries;
+  }
 
   @override
   FutureOr<Map<String, dynamic>?> get(String? key) async => _storage[key];

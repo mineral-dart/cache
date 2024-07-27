@@ -9,7 +9,7 @@ void main() {
 
   test('can get elements', () {
     final provider = MemoryProvider();
-    expect(provider.getAll(), hasLength(0));
+    expect(provider.inspect(), hasLength(0));
   });
 
   test('can put elements', () {

@@ -57,19 +57,41 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<List<Map<String, dynamic>>> getAll() async {
-    final keys = await Command(_connection).send_object(['KEYS', '*']);
-    final values = await Command(_connection).send_object(['MGET', ...keys]);
-
-    return List.from(values.map((e) => jsonDecode(e)));
-  }
-
-  @override
-  Future<Map<String, dynamic>> getInternalValues() async {
+  Future<Map<String, dynamic>> inspect() async {
     final keys = await Command(_connection).send_object(['KEYS', '*']);
     final values = await Command(_connection).send_object(['MGET', ...keys]);
 
     return Map.fromIterables(keys, values.map((e) => jsonDecode(e)));
+  }
+
+  @override
+  Future<Map<String, dynamic>> whereKeyStartsWith(String prefix) async {
+    final keys = await Command(_connection).send_object(['KEYS', '$prefix*']);
+
+    final List values = await Command(_connection).send_object(['MGET', ...keys]);
+    final results = await values.map((val) async {
+      final index = values.indexOf(val);
+      return {keys[index].toString(): jsonDecode(val)};
+    }).wait;
+
+    final Map<String, dynamic> r = {};
+    for (final result in results) {
+      r.addAll(result);
+    }
+
+    return r;
+  }
+
+  @override
+  Future<Map<String, dynamic>> whereKeyStartsWithOrFail(String prefix,
+      {Exception Function()? onFail}) async {
+    final entries = await whereKeyStartsWith(prefix);
+
+    return entries.isEmpty
+        ? onFail != null
+            ? throw onFail()
+            : throw Exception('No entries found')
+        : entries;
   }
 
   @override
@@ -141,7 +163,7 @@ final class RedisProvider implements CacheProviderContract {
     return RedisProvider(
       host: env.get(RedisEnvKeys.redisHost),
       port: int.parse(env.get(RedisEnvKeys.redisPort)),
-      password: env.get(RedisEnvKeys.redisPassword),
+      password: env.get<String?>(RedisEnvKeys.redisPassword),
     );
   }
 }

@@ -11,7 +11,7 @@ final class MemoryProvider implements CacheProviderContract {
   late final LoggerContract logger;
 
   @override
-  Future<void> init() async {
+  void init() {
     final Map<String, dynamic> credentials = {
       'service': 'cache',
       'message': 'memory is used',
@@ -25,13 +25,13 @@ final class MemoryProvider implements CacheProviderContract {
   String get name => 'InMemoryProvider';
 
   @override
-  Future<int> length() async => _storage.length;
+  int length() => _storage.length;
 
   @override
-  Future<Map<String, dynamic>> inspect() async => _storage;
+  Map<String, dynamic> inspect() => _storage;
 
   @override
-  Future<Map<String, dynamic>> whereKeyStartsWith(String prefix) async {
+  Map<String, dynamic> whereKeyStartsWith(String prefix) {
     final entries = _storage.entries
         .where((element) => element.key.startsWith(prefix))
         .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
@@ -40,8 +40,8 @@ final class MemoryProvider implements CacheProviderContract {
   }
 
   @override
-  Future<Map<String, dynamic>> whereKeyStartsWithOrFail(String prefix,
-      {Exception Function()? onFail}) async {
+  Map<String, dynamic> whereKeyStartsWithOrFail(String prefix,
+      {Exception Function()? onFail}) {
     final entries = _storage.entries
         .where((element) => element.key.startsWith(prefix))
         .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
@@ -54,7 +54,16 @@ final class MemoryProvider implements CacheProviderContract {
   }
 
   @override
-  FutureOr<Map<String, dynamic>?> get(String? key) async => _storage[key];
+  Map<String, dynamic>? get(String? key) => _storage[key];
+
+  @override
+  List<Map<String, dynamic>?> getMany(List<String> keys) {
+    final entries = keys
+        .map((key) => _storage[key])
+        .toList();
+
+    return entries as List<Map<String, dynamic>?>;
+  }
 
   @override
   Map<String, dynamic> getOrFail(String key, {Exception Function()? onFail}) {
@@ -69,31 +78,36 @@ final class MemoryProvider implements CacheProviderContract {
   }
 
   @override
-  Future<bool> has(String key) async => _storage.containsKey(key);
+  bool has(String key) => _storage.containsKey(key);
 
   @override
-  Future<void> put<T>(String key, T object) async {
+  void put<T>(String key, T object) {
     _storage[key] = object;
   }
 
   @override
-  Future<void> remove(String key) async {
-    _storage.remove(key);
+  void putMany<T>(Map<String, T> objects) {
+    for(final element in objects.entries) {
+      _storage[element.key] = element.value;
+    }
   }
 
   @override
-  Future<void> removeMany(List<String> keys) async {
+  void remove(String key) => _storage.remove(key);
+
+  @override
+  void removeMany(List<String> keys) {
     for (final key in keys) {
       _storage.remove(key);
     }
   }
 
   @override
-  Future<void> clear() async => _storage.clear();
+  void clear() => _storage.clear();
 
   @override
-  Future<bool> getHealth() async => true;
+  bool getHealth() => true;
 
   @override
-  Future<void> dispose() async => _storage.clear();
+  void dispose() => _storage.clear();
 }

@@ -104,6 +104,17 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
+  Future<List<Map<String, dynamic>?>> getMany(List<String> keys) async {
+    final values = Command(_connection).send_object(['MGET', ...keys]);
+    if (values case final List values) {
+      return List<Map<String, dynamic>?>.from(
+          values.map((e) => e == null ? null : jsonDecode(e)).toList());
+    }
+
+    throw Exception('Values are not iterable');
+  }
+
+  @override
   Future<Map<String, dynamic>> getOrFail(String key, {Exception Function()? onFail}) async {
     final value = await get(key);
     if (value == null) {
@@ -129,6 +140,12 @@ final class RedisProvider implements CacheProviderContract {
   @override
   Future<void> put<T>(String key, T object) async {
     await Command(_connection).send_object(['SET', key, jsonEncode(object)]);
+  }
+
+  @override
+  Future<void> putMany<T>(Map<String, T> objects) async {
+    final values = objects.entries.fold([], (acc, object) => [...acc, object.key, jsonEncode(object)]);
+    await Command(_connection).send_object(['MSET', values.join(' ')]);
   }
 
   @override

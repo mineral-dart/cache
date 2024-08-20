@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:convert';
 
 import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.dart';
@@ -40,8 +39,7 @@ final class MemoryProvider implements CacheProviderContract {
   }
 
   @override
-  Map<String, dynamic> whereKeyStartsWithOrFail(String prefix,
-      {Exception Function()? onFail}) {
+  Map<String, dynamic> whereKeyStartsWithOrFail(String prefix, {Exception Function()? onFail}) {
     final entries = _storage.entries
         .where((element) => element.key.startsWith(prefix))
         .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
@@ -58,11 +56,7 @@ final class MemoryProvider implements CacheProviderContract {
 
   @override
   List<Map<String, dynamic>?> getMany(List<String> keys) {
-    final entries = keys
-        .map((key) => _storage[key])
-        .toList();
-
-    return entries as List<Map<String, dynamic>?>;
+    return keys.map((key) => _storage[key]).cast<Map<String, dynamic>?>().toList();
   }
 
   @override
@@ -87,7 +81,7 @@ final class MemoryProvider implements CacheProviderContract {
 
   @override
   void putMany<T>(Map<String, T> objects) {
-    for(final element in objects.entries) {
+    for (final element in objects.entries) {
       _storage[element.key] = element.value;
     }
   }

@@ -35,7 +35,9 @@ final class RedisProvider implements CacheProviderContract {
         'payload': {
           'host': settings.host,
           'port': settings.port,
-          'password': settings.password != null ? '*' * settings.password!.length : 'NO PASSWORD',
+          'password': settings.password != null
+              ? '*' * settings.password!.length
+              : 'NO PASSWORD',
         },
       };
 
@@ -68,7 +70,8 @@ final class RedisProvider implements CacheProviderContract {
   Future<Map<String, dynamic>> whereKeyStartsWith(String prefix) async {
     final keys = await Command(_connection).send_object(['KEYS', '$prefix*']);
 
-    final List values = await Command(_connection).send_object(['MGET', ...keys]);
+    final List values =
+        await Command(_connection).send_object(['MGET', ...keys]);
     final results = await values.map((val) async {
       final index = values.indexOf(val);
       return {keys[index].toString(): jsonDecode(val)};
@@ -115,7 +118,8 @@ final class RedisProvider implements CacheProviderContract {
   }
 
   @override
-  Future<Map<String, dynamic>> getOrFail(String key, {Exception Function()? onFail}) async {
+  Future<Map<String, dynamic>> getOrFail(String key,
+      {Exception Function()? onFail}) async {
     final value = await get(key);
     if (value == null) {
       if (onFail case Function()) {
@@ -144,7 +148,8 @@ final class RedisProvider implements CacheProviderContract {
 
   @override
   Future<void> putMany<T>(Map<String, T> objects) async {
-    final values = objects.entries.fold([], (acc, object) => [...acc, object.key, jsonEncode(object)]);
+    final values = objects.entries
+        .fold([], (acc, object) => [...acc, object.key, jsonEncode(object)]);
     await Command(_connection).send_object(['MSET', values.join(' ')]);
   }
 

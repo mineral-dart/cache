@@ -1,8 +1,7 @@
 name: mineral_cache
 description: Cache for the Mineral framework.
-version: 1.0.0
+version: 1.0.0-dev.1
 # repository: https://github.com/my_org/my_repo
-publish_to: none
 
 environment:
   sdk: ^3.3.0

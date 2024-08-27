@@ -4,5 +4,4 @@ final class RedisSettings {
   final String? password;
 
   RedisSettings(this.host, this.port, this.password);
-
 }

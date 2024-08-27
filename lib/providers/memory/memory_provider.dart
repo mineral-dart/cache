@@ -33,16 +33,19 @@ final class MemoryProvider implements CacheProviderContract {
   Map<String, dynamic> whereKeyStartsWith(String prefix) {
     final entries = _storage.entries
         .where((element) => element.key.startsWith(prefix))
-        .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
+        .fold(<String, dynamic>{},
+            (acc, element) => {...acc, element.key: element.value});
 
     return entries;
   }
 
   @override
-  Map<String, dynamic> whereKeyStartsWithOrFail(String prefix, {Exception Function()? onFail}) {
+  Map<String, dynamic> whereKeyStartsWithOrFail(String prefix,
+      {Exception Function()? onFail}) {
     final entries = _storage.entries
         .where((element) => element.key.startsWith(prefix))
-        .fold(<String, dynamic>{}, (acc, element) => {...acc, element.key: element.value});
+        .fold(<String, dynamic>{},
+            (acc, element) => {...acc, element.key: element.value});
 
     return entries.isEmpty
         ? onFail != null
@@ -56,7 +59,10 @@ final class MemoryProvider implements CacheProviderContract {
 
   @override
   List<Map<String, dynamic>?> getMany(List<String> keys) {
-    return keys.map((key) => _storage[key]).cast<Map<String, dynamic>?>().toList();
+    return keys
+        .map((key) => _storage[key])
+        .cast<Map<String, dynamic>?>()
+        .toList();
   }
 
   @override

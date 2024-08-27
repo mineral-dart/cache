@@ -1,5 +1,5 @@
 name: mineral_cache
-description: A sample command-line application.
+description: Cache for the Mineral framework.
 version: 1.0.0
 # repository: https://github.com/my_org/my_repo
 publish_to: none
@@ -9,8 +9,7 @@ environment:
 
 # Add regular dependencies here.
 dependencies:
-  mineral:
-    path: ../core
+  mineral: ^4.0.0-dev.2
   redis: ^4.0.0
 
 dev_dependencies:

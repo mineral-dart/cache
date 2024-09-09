@@ -2,11 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mineral/infrastructure/internals/cache/cache_provider_contract.dart';
-import 'package:mineral/infrastructure/internals/environment/environment.dart';
-import 'package:mineral/infrastructure/services/logger/logger.dart';
-import 'package:mineral_cache/providers/redis/redis_env_keys.dart';
-import 'package:mineral_cache/providers/redis/redis_settings.dart';
+import 'package:mineral/services.dart';
+import 'package:mineral_cache/src/providers/redis/redis_env_keys.dart';
+import 'package:mineral_cache/src/providers/redis/redis_settings.dart';
 import 'package:redis/redis.dart';
 
 final class RedisProvider implements CacheProviderContract {

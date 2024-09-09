@@ -1,4 +1,4 @@
-import 'package:mineral_cache/providers/memory/memory_provider.dart';
+import 'package:mineral_cache/providers/memory.dart';
 import 'package:test/test.dart';
 
 void main() {

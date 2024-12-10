@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:mineral/services.dart';
+import 'package:mineral/contracts.dart';
 import 'package:mineral_cache/src/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/src/providers/redis/redis_settings.dart';
 import 'package:redis/redis.dart';

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:mineral/services.dart';
+import 'package:mineral/contracts.dart';
 
 final class MemoryProvider implements CacheProviderContract {
   final Map<String, dynamic> _storage = {};

@@ -233,11 +233,10 @@ packages:
   mineral:
     dependency: "direct main"
     description:
-      name: mineral
-      sha256: "96c79966fea8694276af505b725b120cc7bc41b5cb617f0b960077d5436b5156"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0-dev.6"
+      path: "../core"
+      relative: true
+    source: path
+    version: "4.0.0-dev.8"
   node_preamble:
     dependency: transitive
     description:

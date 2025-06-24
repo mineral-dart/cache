@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:mineral/api.dart';
 import 'package:mineral/contracts.dart';
 import 'package:mineral_cache/src/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/src/providers/redis/redis_settings.dart';
@@ -177,13 +178,13 @@ final class RedisProvider implements CacheProviderContract {
     await _connection.close();
   }
 
-  factory RedisProvider.fromEnvironment(EnvContract env) {
-    env.validate(RedisEnvKeys.values);
+  factory RedisProvider.fromEnvironment(Env env) {
+    env.defineOf(RedisEnv.new);
 
     return RedisProvider(
-      host: env.get(RedisEnvKeys.redisHost),
-      port: int.parse(env.get(RedisEnvKeys.redisPort)),
-      password: env.get<String?>(RedisEnvKeys.redisPassword),
+      host: env.get(RedisEnv.redisHost),
+      port: env.get<int>(RedisEnv.redisPort),
+      password: env.get<String?>(RedisEnv.redisPassword),
     );
   }
 }

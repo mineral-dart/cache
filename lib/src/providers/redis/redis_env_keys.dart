@@ -1,15 +1,14 @@
-import 'package:mineral/contracts.dart';
+import 'package:mineral/api.dart';
 
-enum RedisEnvKeys implements EnvSchema {
-  redisHost('REDIS_HOST'),
-  redisPort('REDIS_PORT'),
-  redisPassword('REDIS_PASSWORD', required: false);
-
-  @override
-  final String key;
+final class RedisEnv implements DefineEnvironment {
+  static final String redisHost = 'REDIS_HOST';
+  static final String redisPort = 'REDIS_PORT';
+  static final String redisPassword = 'REDIS_PASSWORD';
 
   @override
-  final bool required;
-
-  const RedisEnvKeys(this.key, {this.required = true});
+  final Map<String, EnvSchema> schema = {
+    redisHost: env.string(),
+    redisPort: env.number(),
+    redisPassword: env.string(),
+  };
 }

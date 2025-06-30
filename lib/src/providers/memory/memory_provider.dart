@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mineral/api.dart';
 import 'package:mineral/contracts.dart';
 
 final class MemoryProvider implements CacheProviderContract {
@@ -7,6 +8,8 @@ final class MemoryProvider implements CacheProviderContract {
 
   @override
   late final LoggerContract logger;
+
+  MemoryProvider(Env env);
 
   @override
   void init() {

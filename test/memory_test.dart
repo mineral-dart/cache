@@ -1,32 +1,33 @@
+import 'package:mineral/api.dart';
 import 'package:mineral_cache/providers/memory.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('can create in-memory provider', () {
-    final provider = MemoryProvider();
+    final provider = MemoryProvider(env);
     expect(provider.name, 'InMemoryProvider');
   });
 
   test('can get elements', () {
-    final provider = MemoryProvider();
+    final provider = MemoryProvider(env);
     expect(provider.inspect(), hasLength(0));
   });
 
   test('can put elements', () {
-    final provider = MemoryProvider();
+    final provider = MemoryProvider(env);
     provider.put('key', 'value');
     expect(provider.has('key'), true);
   });
 
   test('can remove elements', () {
-    final provider = MemoryProvider();
+    final provider = MemoryProvider(env);
     provider.put('key', 'value');
     provider.remove('key');
     expect(provider.has('key'), false);
   });
 
   test('can remove many elements', () {
-    final provider = MemoryProvider();
+    final provider = MemoryProvider(env);
     provider.put('key1', 'value');
     provider.put('key2', 'value2');
 

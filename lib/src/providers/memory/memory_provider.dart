@@ -1,29 +1,27 @@
 import 'dart:convert';
 
 import 'package:mineral/api.dart';
+import 'package:mineral/container.dart';
 import 'package:mineral/contracts.dart';
 
 final class MemoryProvider implements CacheProviderContract {
   final Map<String, dynamic> _storage = {};
 
-  @override
-  late final LoggerContract logger;
+  LoggerContract get logger => ioc.resolve<LoggerContract>();
 
   MemoryProvider(Env env);
 
   @override
   void init() {
-    final Map<String, dynamic> credentials = {
+    logger.trace(jsonEncode({
       'service': 'cache',
       'message': 'memory is used',
       'payload': {},
-    };
-
-    logger.trace(jsonEncode(credentials));
+    }));
   }
 
   @override
-  String get name => 'InMemoryProvider';
+  String get name => 'In memory provider';
 
   @override
   int length() => _storage.length;

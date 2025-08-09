@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:mineral/api.dart';
+import 'package:mineral/container.dart';
 import 'package:mineral/contracts.dart';
 import 'package:mineral_cache/src/providers/redis/redis_env_keys.dart';
 import 'package:mineral_cache/src/providers/redis/redis_settings.dart';
@@ -13,8 +14,7 @@ final class RedisProvider implements CacheProviderContract {
 
   late final RedisSettings settings;
 
-  @override
-  late final LoggerContract logger;
+  LoggerContract get logger => ioc.resolve<LoggerContract>();
 
   RedisProvider({required String host, required int port, String? password}) {
     settings = RedisSettings(host, port, password);

@@ -1,14 +1,13 @@
 name: mineral_cache
 description: Cache for the Mineral framework.
-version: 1.0.0-dev.3
+version: 1.1.0-dev.1
 repository: https://github.com/mineral-dart/cache
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ">=3.3.0 <4.0.0"
 
 dependencies:
-  mineral:
-    path: ../core
+  mineral: ^4.1.0-dev.1
   redis: ^4.0.0
 
 dev_dependencies:
